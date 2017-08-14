@@ -1,3 +1,5 @@
+# Results
+
 Basic, 60 epochs: .64% avg error, .076 std, .53% mc
 
 Basic w/dropout, 60 epochs: .66% avg error, .040 std, .46% mc

@@ -82,7 +82,11 @@ def conv_pool_layer(
 def cnn_model_fn(features, labels, mode):
   """Model definition."""
   input_layer = tf.reshape(
-    features['images'], [-1, 29, 29, 1], name='input/layer')
+    features['images'], [-1, 28, 28, 1], name='input/layer')
+
+  input_layer = tf.image.resize_images(
+    input_layer,
+    [28, 28])
 
   # Conv-pool layers.
   conv_pool1 = conv_pool_layer(

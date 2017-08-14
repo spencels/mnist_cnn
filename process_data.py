@@ -84,13 +84,13 @@ def elastic_distort(images, sigma=4, alpha=34, kernel_size=33):
   return distort_images.distort_images(images, filtered2d.astype(np.float32))
 
 
-def display_n_images(images, n):
+def compare_n_images(input_images, output_images, n):
   for i in range(n):
     figure = plt.figure()
     f1 = figure.add_subplot(1, 2, 1)
-    plt.imshow(distorted_images[i], cmap='gray')
-    f2 = figure.add_subplot(1, 2, 2)
     plt.imshow(input_images[i], cmap='gray')
+    f2 = figure.add_subplot(1, 2, 2)
+    plt.imshow(output_images[i], cmap='gray')
     plt.show()
 
 
@@ -99,12 +99,11 @@ def process_images(images, distort):
   if distort:
     images = elastic_distort(images, sigma=4, alpha=34)
 
-  return ndimage.interpolation.zoom(
-    input=images,
-    zoom=(1, 29.0 / 28.0, 29.0 / 28.0),
-    order=1,
-    mode='constant',
-    cval=0.0)
+  # This originally used ndimage.interpolate.zoom to scale images to 29x29. For
+  # some reason this caused accuracy losses. Rather than debug the issues, the
+  # resampling was moved to the live model because there was no loss in training
+  # speed.
+  return images
 
 
 def augment_dataset(
@@ -120,10 +119,12 @@ def augment_dataset(
 
   # Augment.
   print('Processing images.')
-  output_images = np.empty((0, 29, 29), dtype=np.uint8)
+  output_images = np.empty((0, 28, 28), dtype=np.uint8)
   for i in range(duplication):
     output_images = np.concatenate(
       (output_images, process_images(input_images, distort)), axis=0)
+
+  # compare_n_images(input_images, output_images, 5)
 
   print('Writing images.')
   with open(output_filename, 'wb') as outfile:
@@ -146,6 +147,7 @@ def main(argv):
     'MNIST_data/train-labels-idx1-ubyte.gz',
     'MNIST_data/train-images-processed',
     'MNIST_data/train-labels-processed',
+    distort=True,
     duplication=8)
 
   augment_dataset(
