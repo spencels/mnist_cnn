@@ -26,7 +26,7 @@ image_vector_distort = tf.load_op_library('bin/image_vector_distort.so')
 
 FLAGS = flags.FLAGS
 flags.DEFINE_bool('train', False, 'Train model. Evaluates if false.')
-flags.DEFINE_integer('epochs', 50, 'Number of steps to train.')
+flags.DEFINE_integer('epochs', 15, 'Number of steps to train.')
 flags.DEFINE_bool(
   'clean', True,
   'Train new model from scratch instead of improving existing model.')
@@ -34,7 +34,7 @@ flags.DEFINE_bool('summaries', False, 'Log detailed image summaries.')
 
 # Model parameters.
 flags.DEFINE_integer('columns', 7, 'Columns in multi-column convnet.')
-flags.DEFINE_bool('dropout', False, 'Enable dropout in training.')
+flags.DEFINE_bool('dropout', True, 'Enable dropout in training.')
 flags.DEFINE_bool('affine', False, 'Enable affine distortion.')
 
 # Enable normal logging.
