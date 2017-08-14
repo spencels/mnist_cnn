@@ -1,0 +1,10 @@
+MNIST_data/
+model/
+*.so
+*.o
+build/
+bazel-*
+venv/
+distort_images.c
+distort_images.html
+*.pyc
